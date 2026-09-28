@@ -18,7 +18,7 @@
 - **服务器层级划分**：
   1. 根域名服务器
   2. 顶级域名服务器
-  3. 权限域名服务器
+  3. 权威域名服务器
   4. 本地域名服务器
 
 ## 4. 域名查询方式
@@ -38,6 +38,6 @@ DNS 解析主要使用两种查询方式，图示展示了它们的流程区别�
 | **A** | 域名 → IPv4 地址 | `www.example.com` → `93.184.216.34` |
 | **AAAA** | 域名 → IPv6 地址 | `www.example.com` → `2606:2800:220:1:248:1893:25c8:1946` |
 | **CNAME** | 别名，指向另一个域名 | `blog.example.com` → `example.github.io` |
-| **MX** | 邮件交换服务器 | `example.com` → `mail.example.com`（优先级 10） |
-| **TXT** | 文本记录（验证 / SPF） | `example.com` → `"v=spf1 include:_spf.google.com ~all"` |
-| **NS** | 该域名的权威服务器 | `example.com` → `ns1.example-dns.com` |
+| **MX** | 邮件交换服务器 | `example.com` → `mail.example.com`（优先级 10）<br>发给 `example.com` 域名的邮件，投递到 `mail.example.com` 这台邮件服务器；数字越小优先级越高 |
+| **TXT** | 文本记录（验证 / SPF） | `example.com` → `"v=spf1 include:_spf.google.com ~all"`<br>这是一条 SPF 记录，专门用于**邮件**、防止他人冒充本域名发信。被授权的发信服务器（如 Google）的邮件正常接收；其余不在名单里的，按 `~all` 判为可疑、**可能进垃圾箱但不强制退回**（若改成 `-all` 才会直接拒收） |
+| **NS** | 该域名的权威服务器 | `example.com` → `ns1.example-dns.com`<br>这个域名的解析工作，全部交给后面这台权威服务器来完成 |
