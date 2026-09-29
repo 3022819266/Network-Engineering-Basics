@@ -106,12 +106,36 @@ HTTP 状态码是服务器返回的三位数字代码，用于告知客户端请
 - **Authorization**：用于携带身份认证信息，常见方案包括 Bearer Token（JWT）、Basic Auth 等。
 - **User-Agent**：服务器可根据该字段识别客户端类型（浏览器、爬虫、移动端等），做差异化响应。
 - **X-Forwarded-For（XFF）**：当请求经过反向代理或负载均衡时，源站看到的 IP 是代理的 IP。XFF 用于追溯客户端真实 IP，格式为 `client, proxy1, proxy2, ...`，最左侧为原始客户端 IP。**注意：该字段可被伪造，需配合信任代理白名单使用。**
+  ### 3.3 完整请求示例
+
+下面是一个登录接口 POST 请求的完整例子：
+
+```http
+POST /api/v1/users/login HTTP/1.1        ← 请求行：方法 + 路径 + 协议版本
+Host: api.example.com                      ← 目标服务器域名（HTTP/1.1 必填）
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36
+Accept: application/json                   ← 客户端希望服务器返回 JSON
+Accept-Language: zh-CN,zh;q=0.9            ← 优先中文，q 是权重（0~1）
+Accept-Encoding: gzip, deflate, br         ← 客户端能解压这几种压缩格式
+Content-Type: application/json; charset=utf-8  ← 告诉服务器：请求体是 UTF-8 编码的 JSON
+Content-Length: 89                         ← 请求体共 89 字节（服务器靠它判断 body 读完没）
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9  ← 携带 JWT 令牌做身份认证
+Cookie: sessionid=abc123; theme=dark       ← 自动带回浏览器存的会话凭证和偏好
+Cache-Control: no-cache                    ← 本次请求不走缓存，强制向服务器验证
+X-Request-ID: 550e8400-e29b-41d4-a716-446655440000  ← 自定义头：给这次请求打唯一 ID，方便日志排查
+
+                                           ← 这个空行是分界线，标志“请求头到此结束”
+{"username":"admin","password":"123456","remember":true}  ← 请求体：真正提交的数据
+```
+
 
 ---
 
 ## 四、会话管理：Cookie 与 Session
 
-HTTP 协议本身是无状态的，服务器无法自动关联同一用户的多次请求。Cookie 和 Session 是解决这一问题的核心机制。
+HTTP 协议本身是无状态的，服务器无法自动关联同一用户的多次请求。Cookie 和 Session 是解决这一问题的核心机制。<br>
+Cookie：浏览器保存的小凭证。<br>
+Session：服务器保存的用户状态。<br>
 
 ### 4.1 对比总览
 
