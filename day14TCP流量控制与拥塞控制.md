@@ -1,8 +1,6 @@
 
 # TCP 的流量控制与拥塞控制
 
-> 适用：计算机网络（传输层 / TCP）复习笔记
-> 关键词：滑动窗口 · rwnd · cwnd · ssthresh · 慢开始 · 拥塞避免 · 快重传 · 快恢复 · AIMD
 
 ---
 
@@ -12,7 +10,6 @@
 - 二、拥塞控制（Congestion Control）
 - 三、数值例题
 - 四、流量控制 vs 拥塞控制
-- 五、补充与勘误说明
 
 ---
 
@@ -127,21 +124,8 @@ cwnd
    1 2 4 8 16  ...   RTT
 ```
 
-### 2.7 状态转移图（Mermaid，GitHub 原生渲染）
 
-```mermaid
-stateDiagram-v2
-    [*] --> 慢开始
-    慢开始 --> 拥塞避免 : cwnd >= ssthresh
-    拥塞避免 --> 拥塞避免 : 每RTT cwnd+1 (线性)
-    慢开始 --> 快恢复 : 3个重复ACK (ssthresh=cwnd/2)
-    拥塞避免 --> 快恢复 : 3个重复ACK (ssthresh=cwnd/2)
-    慢开始 --> 慢开始 : 超时 (cwnd=1, ssthresh=cwnd/2)
-    拥塞避免 --> 慢开始 : 超时 (cwnd=1, ssthresh=cwnd/2)
-    快恢复 --> 拥塞避免 : cwnd=ssthresh 后线性增长
-```
 
----
 
 ## 三、数值例题
 
